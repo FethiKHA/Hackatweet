@@ -3,7 +3,7 @@ var router = express.Router();
 require('../models/connection');
 const User = require("../models/users");
 const Tweet = require("../models/tweet");
-const { checkBody } = require("../modules/checkBody")
+
 
 
 
@@ -29,7 +29,7 @@ router.delete("/", (req, res) => {
       if (data) {
         res.json({ result: true, message: "tweet deleted" });
       } else {
-        res.json({ result: false, error: "tweet not deleted" });
+        res.json({ result: false, error: "tweet still available" });
       }
     });
   });
