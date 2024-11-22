@@ -92,6 +92,25 @@ router.get("/allTweet", (req, res) => {
   });
 
 
+  router.post("/hashtag", (req, res) => {
+    const hashtag = req.body.hashtag; 
+  
+    if (!hashtag) {
+      res.json({ result: false, error: "you're fucking BICHE!!" });
+      return;
+    }
+  
+    const regex = new RegExp(`#${hashtag}`, "i"); 
+  
+    Tweet.find({ content: { $regex: regex } }).then(data => {
+      if (data.length > 0 ) {
+        res.json({ result: true, tweet: data });
+      } else {
+            res.json({result : false, error : "You're fucking BICHE"});   
+        } 
+    });
+  });
+
 
 module.exports = router;
 
