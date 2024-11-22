@@ -82,7 +82,7 @@ router.post("/like", (req, res) => {
     });
 });
 
-
+console.log()
 router.get("/allTweet", (req, res) => {
 
 
@@ -90,14 +90,15 @@ router.get("/allTweet", (req, res) => {
 
         .then(tweets => {
 
-            const tweetTime = tweets.map(tweet => ({
+           const tweetTime = tweets.map(tweet => ({
 
-                ...tweet,
+               ...tweet,
 
-                elapsedTime: getElapsedTime(tweet.created.getTime())
-            }));
+               elapsedTime: getElapsedTime(new Date(tweet.created).getTime())
+           }));
 
-            res.json({ result: true, tweets: tweetTime });
+            res.json({ result: true, tweets: tweets});
+            console.log(tweets)
         })
 
         .catch(() => {
@@ -109,30 +110,38 @@ function getElapsedTime(createdTimestamp) {
 
     const secondsAgo = Math.floor((Date.now() - createdTimestamp) / 1000);
 
-    switch (true) {
+
+if (secondsAgo < 30) return "Few seconds ago";
+
+if (secondsAgo < 3600) return `${Math.floor(secondsAgo / 60)} - m`;
+
+if (secondsAgo < 86400) return `${Math.floor(secondsAgo / 3600)} - h`;
+
+return `${Math.floor(secondsAgo / 86400)} - d `
 
 
-        case (secondsAgo < 30):
-            return "Few seconds ago";
-
-        case (secondsAgo < 3600):
-            return `${Math.floor(secondsAgo / 60)} - m `;
 
 
-        case (secondsAgo < 86400):
-            return `${Math.floor(secondsAgo / 3600)} - h `
+    // // switch (secondsAgo) {
 
-        default:
 
-            return `${Math.floor(secondsAgo / 86400)} - d `
+    //     case (secondsAgo < 30):
+    //         return "Few seconds ago";
 
-    }
+    //     case (secondsAgo < 3600):
+    //         return `${Math.floor(secondsAgo / 60)} - m `;
 
-    //if (secondsAgo < 30) return "Few seconds ago";
 
-    //  if (secondsAgo < 3600) return `${Math.floor(secondsAgo / 60)} - m`;
+    //     case (secondsAgo < 86400):
+    //         return `${Math.floor(secondsAgo / 3600)} - h `
 
-    //  if (secondsAgo < 86400) return `${Math.floor(secondsAgo / 3600)} - h`;
+    //     default:
+
+    //         
+
+    // // }
+
+   
 
 
     return `${Math.floor(secondsAgo / 86400)} - d`;
