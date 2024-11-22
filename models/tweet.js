@@ -8,6 +8,7 @@ const tweetSchema = new mongoose.Schema({
     likes: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
 });
 
+
 const Tweet = mongoose.model("tweets", tweetSchema);
 
 
