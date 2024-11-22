@@ -94,7 +94,7 @@ router.get("/allTweet", (req, res) => {
 
                 ...tweet,
 
-                elapsedTime: getElapsedTime(tweets.created.getTime())
+                elapsedTime: getElapsedTime(tweet.created.getTime())
             }));
 
             res.json({ result: true, tweets: tweetTime });
