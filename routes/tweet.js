@@ -82,18 +82,61 @@ router.post("/like", (req, res) => {
     });
 });
 
+
 router.get("/allTweet", (req, res) => {
-    Tweet.find()
-        .populate("user")
-        .then((data) => {
-            if (data) {
-                res.json({ result: true, tweets: data });
-            } else {
-                res.json({ result: false, error: "Pas de Tweet Marine" });
-            }
+
+
+    Tweet.find().populate("user")
+
+        .then(tweets => {
+
+            const tweetTime = tweets.map(tweet => ({
+
+                ...tweet,
+
+                elapsedTime: getElapsedTime(tweet.created.getTime())
+            }));
+
+            res.json({ result: true, tweets: tweetTime });
+        })
+
+        .catch(() => {
+            res.json({ result: false, error: "Pas de Tweet Marine" });
         });
 });
 
+function getElapsedTime(createdTimestamp) {
+
+    const secondsAgo = Math.floor((Date.now() - createdTimestamp) / 1000);
+
+    switch (true) {
+
+
+        case (secondsAgo < 30):
+            return "Few seconds ago";
+
+        case (secondsAgo < 3600):
+            return `${Math.floor(secondsAgo / 60)} - m `;
+        
+
+        case (secondsAgo < 86400):
+            return `${Math.floor(secondsAgo / 3600)} - h `
+
+        default:
+
+            return `${Math.floor(secondsAgo / 86400)} - d `
+
+    }
+
+    //if (secondsAgo < 30) return "Few seconds ago";
+
+    //  if (secondsAgo < 3600) return `${Math.floor(secondsAgo / 60)} - m`;
+
+    //  if (secondsAgo < 86400) return `${Math.floor(secondsAgo / 3600)} - h`;
+
+
+    return `${Math.floor(secondsAgo / 86400)} - d`;
+}
 
 router.post("/hashtag", (req, res) => {
     const hashtag = req.body.hashtag;
