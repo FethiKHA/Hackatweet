@@ -14,7 +14,7 @@ router.post("/", (req, res) => {
             const newTweet = new Tweet({
                 content: req.body.content,
                 user: data._id,
-                created : Date,
+                created : new Date(),
             });
             newTweet.save();
             res.json({ result: true, newTweet });
