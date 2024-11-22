@@ -92,7 +92,7 @@ router.get("/allTweet", (req, res) => {
 
             const tweetTime = tweets.map(tweet => ({
 
-                ...tweet.toObject(),
+                ...tweet,
 
                 elapsedTime: getElapsedTime(tweet.created.getTime())
             }));
