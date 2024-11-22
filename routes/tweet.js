@@ -14,7 +14,7 @@ router.post("/", (req, res) => {
             const newTweet = new Tweet({
                 content: req.body.content,
                 user: data._id,
-                created : new Date(),
+                created: new Date(),
             });
             newTweet.save();
             res.json({ result: true, newTweet });
@@ -26,12 +26,14 @@ router.post("/", (req, res) => {
 
 
 router.delete("/", (req, res) => {
-    Tweet.deleteOne({ content: req.body.content }).then((data) => {
-        if (data) {
-            res.json({ result: true, message: "tweet deleted" });
-        } else {
-            res.json({ result: false, error: "tweet still available" });
-        }
+    User.findOne({ token: req.body.token }).then((user) => {
+        Tweet.deleteOne({ _id: req.body.tweetId, user: user._id }).then((data) => {
+            if (data) {
+                res.json({ result: true, message: "tweet deleted" });
+            } else {
+                res.json({ result: false, error: "tweet still available" });
+            }
+        })
     });
 });
 
@@ -55,15 +57,15 @@ router.post("/like", (req, res) => {
 
                 const updatedlikes = tweet.likes.filter(e => String(e) !== String(user._id));
 
-                Tweet.updateOne( 
-                    
+                Tweet.updateOne(
+
                     { _id: tweetId },
                     { likes: updatedlikes }
 
                 ).then(() => {
                     return res.json({ result: true, message: "Like supprimé" });
 
-                   
+
                 });
             } else {
 
@@ -82,35 +84,35 @@ router.post("/like", (req, res) => {
 
 router.get("/allTweet", (req, res) => {
     Tweet.find()
-      .populate("user")
-      .then((data) => {
-        if (data) {
-          res.json({ result: true, tweets: data });
-        } else {
-          res.json({ result: false, error: "Pas de Tweet Marine" });
-        }
-      });
-  });
+        .populate("user")
+        .then((data) => {
+            if (data) {
+                res.json({ result: true, tweets: data });
+            } else {
+                res.json({ result: false, error: "Pas de Tweet Marine" });
+            }
+        });
+});
 
 
-  router.post("/hashtag", (req, res) => {
-    const hashtag = req.body.hashtag; 
-  
+router.post("/hashtag", (req, res) => {
+    const hashtag = req.body.hashtag;
+
     if (!hashtag) {
-      res.json({ result: false, error: "you're fucking BICHE!!" });
-      return;
+        res.json({ result: false, error: "you're fucking BICHE!!" });
+        return;
     }
-  
-    const regex = new RegExp(`#${hashtag}`, "i"); 
-  
+
+    const regex = new RegExp(`#${hashtag}`, "i");
+
     Tweet.find({ content: { $regex: regex } }).then(data => {
-      if (data.length > 0 ) {
-        res.json({ result: true, tweet: data });
-      } else {
-            res.json({result : false, error : "You're fucking BICHE"});   
-        } 
+        if (data.length > 0) {
+            res.json({ result: true, tweet: data });
+        } else {
+            res.json({ result: false, error: "You're fucking BICHE" });
+        }
     });
-  });
+});
 
 
 module.exports = router;
