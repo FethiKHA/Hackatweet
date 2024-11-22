@@ -79,6 +79,19 @@ router.post("/like", (req, res) => {
     });
 });
 
+router.get("/allTweet", (req, res) => {
+    Tweet.find()
+      .populate("user")
+      .then((data) => {
+        if (data) {
+          res.json({ result: true, tweets: data });
+        } else {
+          res.json({ result: false, error: "Pas de Tweet Marine" });
+        }
+      });
+  });
+
+
 
 module.exports = router;
 
