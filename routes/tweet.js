@@ -94,7 +94,7 @@ router.get("/allTweet", (req, res) => {
 
                 ...tweet,
 
-                elapsedTime: getElapsedTime(tweet.created.getTime())
+                elapsedTime: getElapsedTime(tweets.created.getTime())
             }));
 
             res.json({ result: true, tweets: tweetTime });
@@ -117,7 +117,7 @@ function getElapsedTime(createdTimestamp) {
 
         case (secondsAgo < 3600):
             return `${Math.floor(secondsAgo / 60)} - m `;
-        
+
 
         case (secondsAgo < 86400):
             return `${Math.floor(secondsAgo / 3600)} - h `
